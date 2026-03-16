@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { FileText, Download } from "lucide-react";
+import { FileText, Download, ExternalLink } from "lucide-react";
 
 const toolkits = [
   {
@@ -33,6 +33,23 @@ const Toolkits = () => (
 
     <section className="py-20 bg-background">
       <div className="container mx-auto px-4 space-y-8">
+        {/* Featured: DPIA Threshold Screening Tool */}
+        <div className="bg-navy rounded-lg p-8 border-l-4 border-l-teal">
+          <p className="text-teal text-xs font-bold uppercase tracking-widest mb-3">Featured Tool</p>
+          <h3 className="text-2xl font-bold text-white mb-3">DPIA Threshold Screening Tool</h3>
+          <p className="text-white/70 mb-6 max-w-3xl">
+            Determine whether your processing activity requires a Data Protection Impact Assessment
+            (DPIA) under applicable law. This interactive screening tool covers 31 jurisdictions
+            including UK GDPR, EU GDPR, Nigeria NDPA 2023 / GAID 2025, 12 US state and federal
+            frameworks, and 16 African data protection laws.
+          </p>
+          <Button variant="teal" size="sm" asChild>
+            <Link to="/dpia-screening-tool">
+              <ExternalLink className="h-4 w-4 mr-1" /> Launch Tool
+            </Link>
+          </Button>
+        </div>
+
         {toolkits.map((tk, i) => (
           <div key={i} className="bg-card border border-border rounded-lg p-8 border-l-4 border-l-teal">
             <h3 className="text-2xl font-bold text-foreground mb-3">{tk.title}</h3>

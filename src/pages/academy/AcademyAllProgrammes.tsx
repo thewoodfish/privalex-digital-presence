@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 
-const GOLD = "#c99014";
-const NAVY = "#0c1f43";
-const CREAM = "#fcf4dc";
-const CARD_LIGHT = "#fdf8ed";
+const GOLD = "#F4A623";
+const NAVY = "#2C3E6B";
+const CREAM = "#F8F9FC";
+const CARD_LIGHT = "#F8F9FC";
 
 const schools = [
   {
@@ -263,7 +263,7 @@ const AcademyAllProgrammes = () => {
           <h2 style={{ fontWeight: 800, fontSize: "1.75rem", color: NAVY, marginBottom: "1rem" }}>
             Ready to register or enquire?
           </h2>
-          <p style={{ color: "#4a5568", maxWidth: 480, margin: "0 auto 2rem", lineHeight: 1.7 }}>
+          <p style={{ color: "#1C2230", maxWidth: 480, margin: "0 auto 2rem", lineHeight: 1.7 }}>
             Contact our training team to discuss the right programme for you or your organisation.
           </p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", justifyContent: "center" }}>

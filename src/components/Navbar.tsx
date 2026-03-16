@@ -15,6 +15,14 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: "Home", href: "/" },
   {
+    label: "About",
+    dropdown: [
+      { label: "Who We Are", href: "/about" },
+      { label: "Our Locations", href: "/about#locations" },
+      { label: "Accreditations & Recognitions", href: "/about#accreditations" },
+    ],
+  },
+  {
     label: "What We Do",
     dropdown: [
       { label: "Data Protection & Privacy", href: "/services/data-protection" },
@@ -23,22 +31,16 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    label: "Insights",
+    label: "Resource Library",
     dropdown: [
       { label: "Articles", href: "/insights" },
-      { label: "White Papers", href: "/resources?format=Guide" },
-      { label: "Case Studies", href: "/resources?category=Data+Protection" },
-      { label: "Regulatory Alerts", href: "/insights?category=Regulatory+Updates" },
+      { label: "Templates", href: "/resources?format=Template" },
+      { label: "Toolkits", href: "/toolkits" },
+      { label: "Client Briefings", href: "/resources?format=Briefing" },
+      { label: "Journal", href: "/resources?format=Journal" },
     ],
   },
-  {
-    label: "About",
-    dropdown: [
-      { label: "Who We Are", href: "/about" },
-      { label: "Our Locations", href: "/about#locations" },
-      { label: "Accreditations & Recognitions", href: "/about#accreditations" },
-    ],
-  },
+  { label: "Events & News", href: "/events-news" },
   { label: "Contact", href: "/contact" },
 ];
 

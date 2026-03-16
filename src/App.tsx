@@ -21,6 +21,8 @@ import ResourcesManager from "./pages/admin/ResourcesManager";
 import InsightsManager from "./pages/admin/InsightsManager";
 import TestimonialsManager from "./pages/admin/TestimonialsManager";
 import ToolkitsManager from "./pages/admin/ToolkitsManager";
+import EventsNews from "./pages/EventsNews";
+import DPIAScreeningTool from "./pages/DPIAScreeningTool";
 import NotFound from "./pages/NotFound";
 import AcademyLayout from "./pages/academy/AcademyLayout";
 import AcademyHome from "./pages/academy/AcademyHome";
@@ -54,6 +56,8 @@ const App = () => (
             <Route path="/services/data-protection" element={<DataProtection />} />
             <Route path="/services/cybersecurity" element={<Cybersecurity />} />
             <Route path="/services/ai-governance" element={<AIGovernance />} />
+            <Route path="/events-news" element={<EventsNews />} />
+            <Route path="/dpia-screening-tool" element={<DPIAScreeningTool />} />
           </Route>
 
           {/* Admin routes */}

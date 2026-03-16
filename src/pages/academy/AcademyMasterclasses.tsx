@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 
-const GOLD = "#c99014";
-const NAVY = "#0c1f43";
-const CREAM = "#fcf4dc";
-const CARD_LIGHT = "#fdf8ed";
+const GOLD = "#F4A623";
+const NAVY = "#2C3E6B";
+const CREAM = "#F8F9FC";
+const CARD_LIGHT = "#F8F9FC";
 
 const topics = [
   "Nigeria Data Protection Act (NDPA) 2023 — enforcement developments, NDPC guidance updates, and case law",

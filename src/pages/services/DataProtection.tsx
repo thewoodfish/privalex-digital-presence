@@ -1,11 +1,26 @@
-import { type ReactNode } from "react";
+import React, { type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Shield, CheckCircle, ArrowRight } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
+const DPIACallout = () => (
+  <div className="md:col-span-2 border-l-4 border-teal rounded-r-xl p-6 bg-[#E0F7FA]">
+    <p className="text-teal text-xs font-bold uppercase tracking-widest mb-2">Free Tool</p>
+    <h4 className="text-base font-semibold text-foreground mb-1">Not sure if you need a DPIA?</h4>
+    <p className="text-muted-foreground text-sm leading-relaxed mb-3">
+      Use our free multi-jurisdictional DPIA Threshold Screening Tool to get an indicative answer in under five minutes.
+    </p>
+    <Link to="/dpia-screening-tool" className="text-teal text-sm font-medium inline-flex items-center gap-1 hover:gap-2 transition-all duration-200">
+      Run the free screening <ArrowRight className="h-3.5 w-3.5" />
+    </Link>
+  </div>
+);
+
 const services = [
   "NDPC Registration & Compliance",
+  "DPCO-Authorised Compliance Audit & Annual Returns Filing",
+  "Statutory Data Protection Audit (NDPA 2023)",
   "NDPA 2023 Gap Assessments",
   "Data Protection Programme Design",
   "Privacy Impact Assessments (PIA/DPIA)",
@@ -13,6 +28,11 @@ const services = [
   "Breach Notification & Response",
   "Cross-Border Data Transfer Mechanisms",
   "GDPR Compliance (UK/EU Operations)",
+  "Pan-African Data Protection Advisory",
+  "Multi-Jurisdictional Privacy Programme Design",
+  "Africa Cross-Border Transfer Mechanisms",
+  "ICO Registration & UK DPA 2018 Compliance",
+  "EU Representative Services (Article 27 GDPR)",
   "DPO-as-a-Service",
   "Records of Processing Activities (ROPA)",
   "Privacy by Design Reviews",
@@ -23,6 +43,10 @@ const serviceDetails = [
   {
     title: "NDPC Registration & Compliance",
     desc: "We guide organisations through the Nigeria Data Protection Commission registration process, data protection audit filings, and ongoing compliance with the Nigeria Data Protection Act 2023. We have supported organisations across financial services, healthcare, education, and the public sector.",
+  },
+  {
+    title: "DPCO-Authorised Compliance Audits & Annual Returns",
+    desc: "As a licensed Data Protection Compliance Organisation (DPCO) authorised by the Nigeria Data Protection Commission, PrivaLex Advisory is accredited to conduct the statutory annual data protection compliance audit required of all data controllers and processors under the Nigeria Data Protection Act 2023. We manage the full audit cycle — scoping, assessment, documentation, remediation planning, and the filing of the mandatory audit return with the NDPC. We act as the DPCO of record for clients who require an independent, regulator-approved compliance partner.",
   },
   {
     title: "Data Protection Impact Assessments (DPIAs)",
@@ -105,7 +129,14 @@ const DataProtection = () => {
           </h1>
           <p className="text-xl text-white/65 max-w-3xl leading-relaxed animate-fade-in-up animation-delay-200">
             We advise organisations at every stage of their data protection journey — from first
-            registration with the NDPC to enterprise-wide privacy transformation programmes.
+            registration with the Nigeria Data Protection Commission (NDPC) to enterprise-wide
+            privacy transformation programmes spanning multiple jurisdictions. PrivaLex Advisory
+            operates across Nigeria, the United Kingdom, the European Union, and Africa, advising
+            organisations on compliance with the Nigeria Data Protection Act 2023, the UK GDPR, the
+            EU GDPR, and applicable data protection frameworks across the continent. As a licensed
+            Data Protection Compliance Organisation (DPCO) accredited by the NDPC, we are also
+            authorised to conduct statutory data protection compliance audits and file the mandatory
+            annual audit returns on behalf of our clients in Nigeria.
           </p>
         </div>
       </section>
@@ -123,10 +154,13 @@ const DataProtection = () => {
                 Practical data protection advisory, built for your organisation.
               </h2>
               <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-                Our data protection practice advises organisations on every aspect of privacy
-                compliance — from the NDPA 2023 and GDPR to sector-specific regulatory requirements.
-                We work with organisations at every stage of maturity, from those building their
-                first compliance programme to those managing complex cross-border data operations.
+                Our data protection practice advises organisations across Nigeria, the United
+                Kingdom, the European Union, and international markets on every dimension of privacy
+                and data protection compliance — from the Nigeria Data Protection Act 2023 and GAID
+                2025, to the UK GDPR, EU GDPR, and applicable African data protection frameworks.
+                We work with organisations at every stage of compliance maturity, from those
+                building their first programme to those managing complex cross-border data operations
+                spanning multiple regulatory regimes.
               </p>
               <p className="text-muted-foreground text-lg leading-relaxed mb-10">
                 Every engagement produces a concrete deliverable: a compliance framework, a gap
@@ -167,14 +201,14 @@ const DataProtection = () => {
           </h2>
           <div className="grid md:grid-cols-2 gap-7">
             {serviceDetails.map((s) => (
-              <div
-                key={s.title}
-                className="bg-card border border-border rounded-xl p-8 hover:shadow-md hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
-              >
-                <div className="absolute top-0 left-0 right-0 h-[3px] bg-teal rounded-t-xl" />
-                <h3 className="text-base font-semibold text-foreground mb-3 mt-2">{s.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{s.desc}</p>
-              </div>
+              <React.Fragment key={s.title}>
+                <div className="bg-card border border-border rounded-xl p-8 hover:shadow-md hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+                  <div className="absolute top-0 left-0 right-0 h-[3px] bg-teal rounded-t-xl" />
+                  <h3 className="text-base font-semibold text-foreground mb-3 mt-2">{s.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{s.desc}</p>
+                </div>
+                {s.title === "Data Protection Impact Assessments (DPIAs)" && <DPIACallout />}
+              </React.Fragment>
             ))}
           </div>
         </div>

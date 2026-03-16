@@ -11,13 +11,17 @@ import {
   Clock,
   User,
   Quote,
+  Search,
+  PencilLine,
+  Settings2,
+  ShieldCheck,
 } from "lucide-react";
 import { seedTestimonials, seedArticles, categoryColors } from "@/data/seedData";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const trustBadges = [
   "PECB Authorised Training Partner",
-  "IIM Accredited",
+  "IIM Accredited CDPO Trainer",
   "NDPC Licensed DPCO",
   "NBA-ICLE Accredited",
   "Holborn, London",
@@ -31,11 +35,11 @@ const whyCards = [
   },
   {
     title: "Africa and Global Reach",
-    desc: "Headquartered in London and Lagos, PrivaLex Advisory advises organisations operating across Nigeria, West Africa, the United Kingdom, and the European Union. Cross-border compliance is not a specialisation. It is what we do every day.",
+    desc: "With our Global Headquarters in London and African Headquarters in Lagos, PrivaLex Advisory advises organisations operating across Nigeria, West Africa, the United Kingdom, and the European Union. Cross-border compliance is not a specialisation. It is what we do every day.",
   },
   {
     title: "Practitioners, Not Theorists",
-    desc: "Our advisors have served as Data Protection Officers, published peer-reviewed research, trained regulators, and testified before legislative committees. When we advise your organisation, you get the judgement of practitioners — not consultants who read the regulation yesterday.",
+    desc: "Our advisors have served as Data Protection Officers, published peer-reviewed research, trained regulators, and testified before legislative committees. When we advise your organisation, you get the judgement of practitioners.",
   },
 ];
 
@@ -43,21 +47,25 @@ const steps = [
   {
     num: "01",
     title: "Discover",
+    icon: Search,
     desc: "Understand the member's processing activities, systems, vendor relationships, and regulatory risk drivers through structured discovery.",
   },
   {
     num: "02",
     title: "Design",
+    icon: PencilLine,
     desc: "Develop a tailored compliance and governance blueprint with prioritised, risk-led actions calibrated to the operator's size and complexity.",
   },
   {
     num: "03",
     title: "Implement",
+    icon: Settings2,
     desc: "Build the documentation, workflows, training materials, and evidence packs required with named owners and defined accountability.",
   },
   {
     num: "04",
     title: "Assure",
+    icon: ShieldCheck,
     desc: "Test effectiveness through compliance audits and periodic reviews. File annual CARs and adapt frameworks as regulations and the business evolve.",
   },
 ];
@@ -83,7 +91,7 @@ const serviceCards = [
   },
   {
     icon: GraduationCap,
-    title: "Regulatory Training & PrivaLex Academy",
+    title: "PrivaLex Academy",
     desc: "Certified training programmes for DPOs, compliance officers, security professionals, risk managers, and lawyers delivered through PrivaLex Academy, our PECB-authorised and IIM-accredited training division. From the IIM CDPO for Nigerian regulatory compliance to ISO 42001 for AI governance, we train the professionals who run compliance programmes.",
     href: "/services/academy",
   },
@@ -108,7 +116,7 @@ const Index = () => {
         {/* Background image */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/hero-image.jpg')" }}
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1920&q=80')" }}
         />
         {/* Dark overlay over image */}
         <div className="absolute inset-0 bg-navy/80" />
@@ -129,7 +137,7 @@ const Index = () => {
         <div className="container mx-auto px-4 pt-28 pb-32 relative z-10">
           <div className="max-w-4xl">
             <span className="inline-block bg-white/10 text-white/80 text-xs font-semibold uppercase tracking-widest px-3 py-1.5 rounded-full mb-8 animate-fade-in border border-white/15">
-              Africa's Leading Data Protection & Cybersecurity Advisory
+              Africa's Leading Data Protection & Technology Compliance Firm
             </span>
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.1] mb-7 animate-fade-in-up animation-delay-100 text-balance">
               Privacy is not a compliance checkbox.{" "}
@@ -137,8 +145,11 @@ const Index = () => {
             </h1>
             <p className="text-lg md:text-xl text-white/65 max-w-3xl mb-10 leading-relaxed animate-fade-in-up animation-delay-300">
               PrivaLex Advisory is Africa's leading data protection, cybersecurity, and technology
-              compliance firm. We advise organisations across Nigeria, the United Kingdom, and
-              global markets on navigating the most complex regulatory environments in the world.
+              compliance firm. As a licensed Data Protection Compliance Organisation (DPCO)
+              accredited by the Nigeria Data Protection Commission, we support organisations across
+              Nigeria, the United Kingdom, and global markets — advising on regulatory compliance,
+              conducting statutory data protection audits, and filing the mandatory annual audit
+              returns required under the Nigeria Data Protection Act 2023.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-500">
               <Button variant="teal" size="lg" asChild>
@@ -224,9 +235,14 @@ const Index = () => {
                 className="bg-card rounded-xl p-7 border border-border hover:shadow-md hover:-translate-y-1 transition-all duration-300 group"
                 style={{ transitionDelay: `${i * 60}ms` }}
               >
-                <span className="font-display text-5xl font-bold text-teal/25 group-hover:text-teal/40 transition-colors mb-4 block leading-none">
-                  {step.num}
-                </span>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-lg bg-teal/10 flex items-center justify-center group-hover:bg-teal/20 transition-colors flex-shrink-0">
+                    <step.icon className="h-5 w-5 text-teal" />
+                  </div>
+                  <span className="font-display text-3xl font-bold text-teal/25 group-hover:text-teal/40 transition-colors leading-none">
+                    {step.num}
+                  </span>
+                </div>
                 <h3 className="text-base font-semibold text-foreground mb-2">{step.title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
               </div>
@@ -275,6 +291,42 @@ const Index = () => {
             <Button variant="outline" size="lg" asChild>
               <Link to="/contact">Speak to Our Team</Link>
             </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── DPIA SCREENING TOOL ──────────────────────────────── */}
+      <section className="py-20 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #1B2A6B 0%, #151c58 100%)" }}>
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage: "radial-gradient(circle, #ffffff 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+          }}
+        />
+        <div className="container mx-auto px-4 relative z-10">
+          <p className="text-teal text-sm font-semibold uppercase tracking-widest mb-4">Free Compliance Tool</p>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-5 max-w-2xl text-balance">
+            Does your processing require a DPIA?
+          </h2>
+          <p className="text-white/70 max-w-2xl mb-8 text-lg leading-relaxed">
+            Not sure if your processing activity triggers a legal obligation to conduct a Data
+            Protection Impact Assessment? Our free multi-jurisdictional screening tool gives you an
+            indicative answer in under five minutes — covering UK GDPR, EU GDPR, Nigeria NDPA 2023,
+            12 US state and federal frameworks, and 16 African data protection laws.
+          </p>
+          <Button variant="teal" size="lg" asChild>
+            <Link to="/dpia-screening-tool" className="group">
+              Run the free screening
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          </Button>
+          <div className="flex flex-wrap gap-2 mt-6">
+            {["UK GDPR", "Nigeria NDPA", "+ 29 more"].map((badge) => (
+              <span key={badge} className="bg-white/10 text-white/75 text-xs font-medium px-3 py-1 rounded-full border border-white/15">
+                {badge}
+              </span>
+            ))}
           </div>
         </div>
       </section>
@@ -403,10 +455,9 @@ const Index = () => {
                 technology compliance advice available to the world's largest companies.
               </p>
               <p className="text-white/65 text-lg leading-relaxed mb-10">
-                From our offices in Lekki, Lagos and Holborn, London, we advise financial
-                institutions, technology companies, healthcare providers, government agencies, and
-                multinationals on compliance programmes that actually work — under the NDPA, GDPR,
-                ISO standards, and global best practices.
+                From our offices in Lagos and London, we serve financial institutions, technology
+                companies, healthcare providers, government agencies, and international organisations
+                operating across Nigeria, West Africa, the United Kingdom, and the European Union.
               </p>
               <Button variant="white-outline" size="lg" asChild>
                 <Link to="/about">Learn More About Us</Link>
@@ -441,28 +492,41 @@ const Index = () => {
             backgroundSize: "28px 28px",
           }}
         />
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <p className="text-white/70 text-sm font-semibold uppercase tracking-widest mb-4">
-            PrivaLex Academy
-          </p>
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-5 max-w-2xl mx-auto text-balance">
-            Train the professionals who run your compliance programme.
-          </h2>
-          <p className="text-white/75 max-w-2xl mx-auto mb-10 text-lg leading-relaxed">
-            PrivaLex Academy is our dedicated training division — PECB authorised, IIM accredited,
-            and NDPC ecosystem approved. We offer certified programmes across data protection,
-            information security, cybersecurity, and AI governance. We also host NBA-ICLE accredited
-            masterclasses.
-          </p>
-          <Button
-            size="lg"
-            className="bg-navy text-white hover:bg-navy/90 shadow-lg hover:shadow-xl transition-all duration-200"
-            asChild
-          >
-            <a href="https://www.privalexacademy.com" target="_blank" rel="noopener noreferrer">
-              Visit PrivaLex Academy <ArrowRight className="h-4 w-4" />
-            </a>
-          </Button>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="text-center lg:text-left">
+              <p className="text-white/70 text-sm font-semibold uppercase tracking-widest mb-4">
+                PrivaLex Academy
+              </p>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-5 max-w-2xl text-balance">
+                Train the professionals who run your compliance programme.
+              </h2>
+              <p className="text-white/75 max-w-2xl mb-10 text-lg leading-relaxed">
+                PrivaLex Academy is our dedicated training division — PECB authorised, IIM accredited,
+                and NDPC ecosystem approved. We offer certified programmes across data protection,
+                information security, cybersecurity, and AI governance. We also host NBA-ICLE accredited
+                masterclasses.
+              </p>
+              <Button
+                size="lg"
+                className="bg-navy text-white hover:bg-navy/90 shadow-lg hover:shadow-xl transition-all duration-200"
+                asChild
+              >
+                <a href="https://www.privalexacademy.com" target="_blank" rel="noopener noreferrer">
+                  Visit PrivaLex Academy <ArrowRight className="h-4 w-4" />
+                </a>
+              </Button>
+            </div>
+            <div className="hidden lg:block">
+              <div className="rounded-2xl overflow-hidden shadow-2xl">
+                <img
+                  src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80"
+                  alt="Professional training workshop"
+                  className="w-full h-80 object-cover"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>

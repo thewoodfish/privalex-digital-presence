@@ -63,10 +63,9 @@ const About = () => {
                 international standards.
               </p>
               <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-                From our offices in Lekki, Lagos and Holborn, London, we serve financial
-                institutions, technology companies, healthcare providers, government agencies, and
-                international organisations operating across Nigeria, West Africa, the United
-                Kingdom, and the European Union.
+                From our offices in Lagos and London, we serve financial institutions, technology
+                companies, healthcare providers, government agencies, and international organisations
+                operating across Nigeria, West Africa, the United Kingdom, and the European Union.
               </p>
               <SectionLabel>Our Mission</SectionLabel>
               <blockquote className="border-l-4 border-teal pl-6 py-2 italic text-foreground text-lg leading-relaxed">
@@ -79,20 +78,20 @@ const About = () => {
               <div className="space-y-7">
                 {[
                   {
-                    title: "Rigour",
-                    desc: "Every piece of advice is grounded in law, regulation, and technical standards.",
+                    title: "Integrity over Convenience",
+                    desc: "We do not tell clients what they want to hear. We tell them what the law requires and what the risk demands. The gap between those two things is where we do our best work.",
                   },
                   {
-                    title: "Practicality",
-                    desc: "We deliver outputs our clients can implement, not theoretical frameworks.",
+                    title: "Substance over Signalling",
+                    desc: "Compliance that exists only on paper protects no one. Every framework we build, every audit we conduct, and every policy we draft is designed to function — not merely to exist.",
                   },
                   {
-                    title: "Independence",
-                    desc: "We are not tied to any vendor, platform, or technology provider.",
+                    title: "Counsel without Compromise",
+                    desc: "The value of independent advice lies entirely in its independence. We hold no commercial allegiance to any regulator, platform, or technology provider. Our only obligation is to the accuracy of the law and the interests of our clients.",
                   },
                   {
-                    title: "African-first",
-                    desc: "We are built for African organisations while maintaining global standards.",
+                    title: "Built to Last",
+                    desc: "The best advisory firms are not remembered for the advice they gave last year. They are remembered for the institutions they helped build. We measure our work not by engagements closed but by compliance programmes that still stand.",
                   },
                 ].map((v) => (
                   <div key={v.title} className="flex gap-4">

@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 
-const GOLD = "#c99014";
-const NAVY = "#0c1f43";
-const CREAM = "#fcf4dc";
-const CARD_LIGHT = "#fdf8ed";
+const GOLD = "#F4A623";
+const NAVY = "#2C3E6B";
+const CREAM = "#F8F9FC";
+const CARD_LIGHT = "#F8F9FC";
 
 interface Programme {
   badge: string;
@@ -14,7 +14,7 @@ interface Programme {
 }
 
 const STANDARD_REGISTER =
-  "To register, visit privalexacademy.com and click 'Register Now' on this programme page. Complete the online registration form with your full name, organisation, email address, and billing details. You will receive a booking confirmation within one business day. Payment can be made by bank transfer (USD), card, or institutional purchase order. Corporate registrations for three or more participants qualify for group pricing — contact us at training@privalexadvisory.com to discuss.";
+  "To register, click the 'Register Now' button at the top of this page. Complete the registration form with your full name, organisation, email address, and billing details. You will receive a booking confirmation within one business day. Payment can be made by bank transfer (USD), card, or institutional purchase order. Corporate registrations for three or more participants qualify for group pricing — contact us at training@privalexadvisory.com to discuss.";
 
 const programmes: Programme[] = [
   {
@@ -155,7 +155,7 @@ const ProgrammeCard = ({ prog }: { prog: Programme }) => (
             >
               {item.label}
             </span>
-            <span style={{ fontSize: "0.82rem", color: "#4a5568" }}>{item.value}</span>
+            <span style={{ fontSize: "0.82rem", color: "#1C2230" }}>{item.value}</span>
           </div>
         ))}
       </div>
@@ -196,7 +196,7 @@ const ProgrammeCard = ({ prog }: { prog: Programme }) => (
         >
           How to Register
         </h4>
-        <p style={{ fontSize: "0.88rem", lineHeight: 1.75, color: "#4a5568" }}>
+        <p style={{ fontSize: "0.88rem", lineHeight: 1.75, color: "#1C2230" }}>
           {prog.howToRegister}
         </p>
       </div>
@@ -290,13 +290,140 @@ const AcademyCybersecurity = () => {
         </div>
       </section>
 
+      {/* WHAT OUR PARTICIPANTS SAY */}
+      <section style={{ background: "#fff", padding: "5rem 0" }}>
+        <div className="container mx-auto px-4">
+          <div style={{ maxWidth: 600, marginBottom: "3rem" }}>
+            <p
+              style={{
+                fontSize: "0.72rem",
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                color: GOLD,
+                textTransform: "uppercase",
+                marginBottom: "0.75rem",
+              }}
+            >
+              What Our Participants Say
+            </p>
+            <h2
+              style={{
+                fontWeight: 800,
+                fontSize: "clamp(1.5rem, 3vw, 2.4rem)",
+                color: NAVY,
+                lineHeight: 1.2,
+                marginBottom: "0.75rem",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Outcomes that speak for themselves.
+            </h2>
+            <p style={{ color: "#1C2230", lineHeight: 1.8, fontSize: "1rem", opacity: 0.7 }}>
+              Hear from professionals who have completed PrivaLex Academy programmes.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-5">
+            {[
+              {
+                name: "Participant",
+                jobTitle: "Data Protection Officer",
+                organisation: "Financial Services Organisation",
+                programme: "IIM CDPO",
+                review:
+                  "The IIM CDPO programme gave me exactly what I needed to step into my DPO role with confidence. The instruction was rooted in Nigerian regulatory practice — not just global theory.",
+                stars: 5,
+              },
+              {
+                name: "Participant",
+                jobTitle: "Compliance Manager",
+                organisation: "Technology Company",
+                programme: "PECB ISO 27001 Lead Implementer",
+                review:
+                  "Practical, rigorous, and directly applicable to my work. The instructors brought real implementation experience that made all the difference.",
+                stars: 5,
+              },
+              {
+                name: "Participant",
+                jobTitle: "Legal Counsel",
+                organisation: "Multinational Corporation",
+                programme: "Advanced Data Protection Practitioner (ADPP)",
+                review:
+                  "The ADPP is unlike any other programme I have attended. The multi-jurisdictional depth and the quality of instruction are genuinely exceptional.",
+                stars: 5,
+              },
+            ].map((t, i) => (
+              <div
+                key={i}
+                style={{
+                  background: CARD_LIGHT,
+                  border: "1px solid #e8e0cc",
+                  borderRadius: "10px",
+                  padding: "1.75rem",
+                  position: "relative",
+                  overflow: "hidden",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: "3px",
+                    background: GOLD,
+                  }}
+                />
+                <div style={{ display: "flex", gap: "3px", marginBottom: "1rem" }}>
+                  {Array.from({ length: t.stars }).map((_, j) => (
+                    <svg key={j} width="14" height="14" viewBox="0 0 14 14" fill={GOLD}>
+                      <path d="M7 1l1.5 3.5L12 5l-2.5 2.5.5 3.5L7 9.5 4 11l.5-3.5L2 5l3.5-.5z" />
+                    </svg>
+                  ))}
+                </div>
+                <p
+                  style={{
+                    color: "#1C2230",
+                    fontSize: "0.88rem",
+                    lineHeight: 1.75,
+                    marginBottom: "1.25rem",
+                    flex: 1,
+                  }}
+                >
+                  "{t.review}"
+                </p>
+                <div style={{ borderTop: "1px solid #e8e0cc", paddingTop: "0.75rem" }}>
+                  <p style={{ fontWeight: 700, fontSize: "0.85rem", color: NAVY }}>{t.name}</p>
+                  <p style={{ fontSize: "0.78rem", color: "#1C2230", opacity: 0.65 }}>
+                    {t.jobTitle} · {t.organisation}
+                  </p>
+                  <p
+                    style={{
+                      fontSize: "0.72rem",
+                      fontWeight: 700,
+                      color: GOLD,
+                      letterSpacing: "0.04em",
+                      marginTop: "0.25rem",
+                    }}
+                  >
+                    {t.programme}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section style={{ background: CREAM, padding: "4rem 0" }}>
         <div className="container mx-auto px-4" style={{ textAlign: "center" }}>
           <h2 style={{ fontWeight: 800, fontSize: "1.75rem", color: NAVY, marginBottom: "1rem" }}>
             Ready to enrol or enquire?
           </h2>
-          <p style={{ color: "#4a5568", maxWidth: 480, margin: "0 auto 2rem" }}>
+          <p style={{ color: "#1C2230", maxWidth: 480, margin: "0 auto 2rem" }}>
             Contact our training team or register directly for the next available cohort.
           </p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", justifyContent: "center" }}>

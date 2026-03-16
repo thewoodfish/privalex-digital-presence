@@ -48,7 +48,6 @@ const Contact = () => {
           }}
         />
         <div className="container mx-auto px-4 pt-32 pb-24 relative z-10">
-          <SectionLabel>Get In Touch</SectionLabel>
           <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight animate-fade-in-up">
             Get in Touch
           </h1>

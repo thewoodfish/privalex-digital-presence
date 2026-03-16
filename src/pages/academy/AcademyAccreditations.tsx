@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 
-const GOLD = "#c99014";
-const NAVY = "#0c1f43";
-const CREAM = "#fcf4dc";
-const CARD_LIGHT = "#fdf8ed";
+const GOLD = "#F4A623";
+const NAVY = "#2C3E6B";
+const CREAM = "#F8F9FC";
+const CARD_LIGHT = "#F8F9FC";
 
 const accreditations = [
   {
@@ -229,7 +229,7 @@ const AcademyAccreditations = () => {
           <h2 style={{ fontWeight: 800, fontSize: "1.75rem", color: NAVY, marginBottom: "1rem" }}>
             Earn a credential that is recognised.
           </h2>
-          <p style={{ color: "#4a5568", maxWidth: 500, margin: "0 auto 2rem", lineHeight: 1.7 }}>
+          <p style={{ color: "#1C2230", maxWidth: 500, margin: "0 auto 2rem", lineHeight: 1.7 }}>
             Every PrivaLex Academy programme leads to a formally accredited qualification.
             Explore our programmes or get in touch to discuss the right credential for your
             career or organisation.

@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 
-const GOLD = "#c99014";
-const NAVY = "#0c1f43";
+const GOLD = "#F4A623";
+const NAVY = "#2C3E6B";
 
 const programmesLinks = [
   { label: "School of Data Protection & Privacy", to: "/academy/school/data-protection" },
@@ -80,7 +80,7 @@ const AcademyNavbar = () => {
           <div className="hidden lg:flex items-center gap-1">
             <Link
               to="/academy"
-              className="px-3 py-2 text-xs font-semibold tracking-widest transition-colors hover:text-[#c99014]"
+              className="px-3 py-2 text-xs font-semibold tracking-widest transition-colors hover:text-[#F4A623]"
               style={{ color: location.pathname === "/academy" ? GOLD : NAVY }}
             >
               HOME
@@ -90,7 +90,7 @@ const AcademyNavbar = () => {
             <div ref={dropdownRef} className="relative">
               <button
                 onClick={() => setProgrammesOpen((o) => !o)}
-                className="flex items-center gap-1 px-3 py-2 text-xs font-semibold tracking-widest transition-colors hover:text-[#c99014]"
+                className="flex items-center gap-1 px-3 py-2 text-xs font-semibold tracking-widest transition-colors hover:text-[#F4A623]"
                 style={{
                   color: location.pathname.includes("/academy/school") || location.pathname === "/academy/programmes" ? GOLD : NAVY,
                   background: "none",
@@ -139,7 +139,7 @@ const AcademyNavbar = () => {
                         textDecoration: "none",
                         transition: "background 0.15s",
                       }}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = "#fdf8ed")}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "#F8F9FC")}
                       onMouseLeave={(e) => (e.currentTarget.style.background = "")}
                     >
                       {link.label}
@@ -153,7 +153,7 @@ const AcademyNavbar = () => {
               <Link
                 key={link.to}
                 to={link.to}
-                className="px-3 py-2 text-xs font-semibold tracking-widest transition-colors hover:text-[#c99014]"
+                className="px-3 py-2 text-xs font-semibold tracking-widest transition-colors hover:text-[#F4A623]"
                 style={{ color: location.pathname === link.to ? GOLD : NAVY }}
               >
                 {link.label}
