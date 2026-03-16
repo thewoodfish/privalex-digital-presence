@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { LayoutDashboard, FileText, BookOpen, MessageSquare, Settings, LogOut, Wrench } from "lucide-react";
+import { LayoutDashboard, FileText, BookOpen, MessageSquare, LogOut, Wrench } from "lucide-react";
 import PrivaLexLogo from "@/components/PrivaLexLogo";
 
 const sidebarLinks = [
@@ -12,6 +13,12 @@ const sidebarLinks = [
 
 const AdminLayout = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!localStorage.getItem("privalex_admin")) {
+      navigate("/admin/login");
+    }
+  }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("privalex_admin");

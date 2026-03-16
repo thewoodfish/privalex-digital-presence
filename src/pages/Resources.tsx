@@ -2,51 +2,33 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { seedResources, categoryColors, accessLevelColors, accessLevelLabels } from "@/data/seedData";
-import { Search, FileText, Download, X } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { useToast } from "@/hooks/use-toast";
+import { seedResources, categoryColors } from "@/data/seedData";
+import { Search, FileText, Download } from "lucide-react";
+import { getAdminResources, downloadResource } from "@/lib/resources";
 
 const categories = ["All", "Data Protection", "Cybersecurity", "AI Governance", "Regulatory Updates", "Training"];
-const accessLevels = ["All", "free", "register", "clients_only"];
-const formats = ["All", "PDF", "Excel Checklist", "Template", "Guide", "Report"];
 
 const Resources = () => {
-  const { toast } = useToast();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
-  const [access, setAccess] = useState("All");
-  const [regModalOpen, setRegModalOpen] = useState(false);
-  const [regForm, setRegForm] = useState({ name: "", email: "", organisation: "" });
-  const [selectedResource, setSelectedResource] = useState<string | null>(null);
 
-  const filtered = seedResources.filter(r => {
+  // Seed resources (static display, no real file)
+  const filteredSeed = seedResources.filter(r => {
+    if (!r.published) return false;
     if (search && !r.title.toLowerCase().includes(search.toLowerCase()) && !r.description.toLowerCase().includes(search.toLowerCase())) return false;
     if (category !== "All" && r.category !== category) return false;
-    if (access !== "All" && r.access_level !== access) return false;
-    return r.published;
+    return true;
   });
 
-  const featured = filtered.filter(r => r.featured);
-  const rest = filtered.filter(r => !r.featured);
+  const featured = filteredSeed.filter(r => r.featured);
+  const rest = filteredSeed.filter(r => !r.featured);
 
-  const handleAccess = (resource: typeof seedResources[0]) => {
-    if (resource.access_level === "free") {
-      toast({ title: "Download started", description: `Downloading ${resource.title}` });
-    } else if (resource.access_level === "register") {
-      setSelectedResource(resource.id);
-      setRegModalOpen(true);
-    } else {
-      toast({ title: "Clients Only", description: "Contact us to access this resource." });
-    }
-  };
-
-  const handleRegSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast({ title: "Registration complete", description: "Your download will begin shortly." });
-    setRegModalOpen(false);
-    setRegForm({ name: "", email: "", organisation: "" });
-  };
+  // Admin-uploaded resources from localStorage
+  const adminResources = getAdminResources().filter(r => {
+    if (search && !r.title.toLowerCase().includes(search.toLowerCase()) && !r.description.toLowerCase().includes(search.toLowerCase())) return false;
+    if (category !== "All" && !r.tags.includes(category)) return false;
+    return true;
+  });
 
   return (
     <div>
@@ -80,7 +62,32 @@ const Resources = () => {
 
       <section className="py-12 bg-background">
         <div className="container mx-auto px-4">
-          {/* Featured */}
+
+          {/* Admin-uploaded resources */}
+          {adminResources.length > 0 && (
+            <div className="mb-12">
+              <h2 className="text-lg font-semibold text-foreground mb-6">Latest Resources</h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {adminResources.map(r => (
+                  <div key={r.id} className="bg-card border border-border rounded-lg p-6 hover:shadow-md transition-shadow">
+                    <FileText className="h-6 w-6 text-teal mb-3" />
+                    <h3 className="text-lg font-semibold text-foreground mb-2">{r.title}</h3>
+                    {r.description && <p className="text-muted-foreground text-sm mb-4 line-clamp-2">{r.description}</p>}
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {r.tags.map(tag => (
+                        <span key={tag} className={`px-2 py-0.5 rounded-full text-xs font-medium ${categoryColors[tag] || "bg-muted text-muted-foreground"}`}>{tag}</span>
+                      ))}
+                    </div>
+                    <Button variant="teal" size="sm" className="w-full" onClick={() => downloadResource(r)}>
+                      <Download className="h-4 w-4 mr-1" /> Download
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Featured seed resources */}
           {featured.length > 0 && (
             <div className="mb-12">
               <h2 className="text-lg font-semibold text-foreground mb-6">Featured Resources</h2>
@@ -93,11 +100,10 @@ const Resources = () => {
                     <p className="text-muted-foreground text-sm mb-4">{r.description}</p>
                     <div className="flex flex-wrap items-center gap-2 mb-4">
                       <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${categoryColors[r.category] || "bg-muted text-muted-foreground"}`}>{r.category}</span>
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${accessLevelColors[r.access_level]}`}>{accessLevelLabels[r.access_level]}</span>
                       <span className="text-xs text-muted-foreground">{r.format}</span>
                     </div>
-                    <Button variant="teal" size="sm" onClick={() => handleAccess(r)}>
-                      <Download className="h-4 w-4 mr-1" /> {r.access_level === "free" ? "Download" : r.access_level === "register" ? "Register to Download" : "Request Access"}
+                    <Button variant="teal" size="sm">
+                      <Download className="h-4 w-4 mr-1" /> Download
                     </Button>
                   </div>
                 ))}
@@ -105,28 +111,27 @@ const Resources = () => {
             </div>
           )}
 
-          {/* Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {rest.map(r => (
-              <div key={r.id} className="bg-card border border-border rounded-lg p-6 hover:shadow-md transition-shadow">
-                <div className="flex items-start justify-between mb-3">
-                  <FileText className="h-6 w-6 text-teal" />
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${accessLevelColors[r.access_level]}`}>{accessLevelLabels[r.access_level]}</span>
+          {/* Rest of seed resources */}
+          {rest.length > 0 && (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {rest.map(r => (
+                <div key={r.id} className="bg-card border border-border rounded-lg p-6 hover:shadow-md transition-shadow">
+                  <FileText className="h-6 w-6 text-teal mb-3" />
+                  <h3 className="text-lg font-semibold text-foreground mb-2">{r.title}</h3>
+                  <p className="text-muted-foreground text-sm mb-4 line-clamp-2">{r.description}</p>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${categoryColors[r.category] || "bg-muted text-muted-foreground"}`}>{r.category}</span>
+                    <span className="text-xs text-muted-foreground">{r.format}</span>
+                  </div>
+                  <Button variant="teal" size="sm" className="w-full">
+                    <Download className="h-4 w-4 mr-1" /> Download
+                  </Button>
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">{r.title}</h3>
-                <p className="text-muted-foreground text-sm mb-4 line-clamp-2">{r.description}</p>
-                <div className="flex items-center gap-2 mb-4">
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${categoryColors[r.category] || "bg-muted text-muted-foreground"}`}>{r.category}</span>
-                  <span className="text-xs text-muted-foreground">{r.format}</span>
-                </div>
-                <Button variant="teal" size="sm" className="w-full" onClick={() => handleAccess(r)}>
-                  <Download className="h-4 w-4 mr-1" /> {r.access_level === "free" ? "Download" : r.access_level === "register" ? "Register" : "Request Access"}
-                </Button>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
-          {filtered.length === 0 && (
+          {filteredSeed.length === 0 && adminResources.length === 0 && (
             <div className="text-center py-12">
               <p className="text-muted-foreground">No resources found matching your criteria.</p>
             </div>
@@ -134,32 +139,6 @@ const Resources = () => {
         </div>
       </section>
 
-      {/* Register modal */}
-      <Dialog open={regModalOpen} onOpenChange={setRegModalOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Register to Download</DialogTitle>
-            <DialogDescription>Enter your details to access this resource.</DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleRegSubmit} className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-foreground block mb-1">Full Name *</label>
-              <Input required value={regForm.name} onChange={e => setRegForm({ ...regForm, name: e.target.value })} />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-foreground block mb-1">Email *</label>
-              <Input required type="email" value={regForm.email} onChange={e => setRegForm({ ...regForm, email: e.target.value })} />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-foreground block mb-1">Organisation</label>
-              <Input value={regForm.organisation} onChange={e => setRegForm({ ...regForm, organisation: e.target.value })} />
-            </div>
-            <Button variant="teal" className="w-full" type="submit">Register & Download</Button>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      {/* CTA */}
       <section className="py-16 bg-light-grey">
         <div className="container mx-auto px-4 text-center">
           <p className="text-muted-foreground mb-4">Can't find what you're looking for?</p>

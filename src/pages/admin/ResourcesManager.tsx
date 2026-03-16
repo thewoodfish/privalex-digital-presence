@@ -1,145 +1,180 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { seedResources, categoryColors, accessLevelLabels } from "@/data/seedData";
-import { Plus, Pencil, Trash2, Star } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Plus, Trash2, X, FileText, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { getAdminResources, saveAdminResource, deleteAdminResource, downloadResource, type AdminResource } from "@/lib/resources";
+
+const emptyForm = { title: "", description: "", tags: [] as string[], file: null as File | null };
 
 const ResourcesManager = () => {
   const { toast } = useToast();
-  const [resources, setResources] = useState(seedResources);
-  const [formOpen, setFormOpen] = useState(false);
-  const [editId, setEditId] = useState<string | null>(null);
-  const [form, setForm] = useState({
-    title: "", description: "", category: "Data Protection", format: "PDF",
-    jurisdiction: "Nigeria", access_level: "free", featured: false, author: "",
-  });
+  const [resources, setResources] = useState<AdminResource[]>(getAdminResources);
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState(emptyForm);
+  const [tagInput, setTagInput] = useState("");
+  const [saving, setSaving] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  const openNew = () => {
-    setEditId(null);
-    setForm({ title: "", description: "", category: "Data Protection", format: "PDF", jurisdiction: "Nigeria", access_level: "free", featured: false, author: "" });
-    setFormOpen(true);
-  };
+  const refresh = () => setResources(getAdminResources());
 
-  const openEdit = (r: typeof resources[0]) => {
-    setEditId(r.id);
-    setForm({ title: r.title, description: r.description, category: r.category, format: r.format, jurisdiction: r.jurisdiction, access_level: r.access_level, featured: r.featured, author: r.author });
-    setFormOpen(true);
-  };
-
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editId) {
-      setResources(resources.map(r => r.id === editId ? { ...r, ...form } as any : r));
-      toast({ title: "Resource updated" });
-    } else {
-      setResources([...resources, { ...form, id: Date.now().toString(), published: true, publication_date: new Date().toISOString().split("T")[0], download_count: 0 } as any]);
-      toast({ title: "Resource created" });
+  const addTag = () => {
+    const t = tagInput.trim();
+    if (t && !form.tags.includes(t)) {
+      setForm(f => ({ ...f, tags: [...f.tags, t] }));
     }
-    setFormOpen(false);
+    setTagInput("");
+  };
+
+  const removeTag = (tag: string) => setForm(f => ({ ...f, tags: f.tags.filter(t => t !== tag) }));
+
+  const handleTagKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      addTag();
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.file) { toast({ title: "Please select a file", variant: "destructive" }); return; }
+    setSaving(true);
+    const reader = new FileReader();
+    reader.onload = () => {
+      const resource: AdminResource = {
+        id: Date.now().toString(),
+        title: form.title,
+        description: form.description,
+        tags: form.tags,
+        fileName: form.file!.name,
+        fileUrl: reader.result as string,
+        fileType: form.file!.type,
+        createdAt: new Date().toISOString(),
+      };
+      saveAdminResource(resource);
+      refresh();
+      setForm(emptyForm);
+      setTagInput("");
+      setShowForm(false);
+      setSaving(false);
+      toast({ title: "Resource uploaded" });
+    };
+    reader.readAsDataURL(form.file);
   };
 
   const handleDelete = (id: string) => {
-    setResources(resources.filter(r => r.id !== id));
+    deleteAdminResource(id);
+    refresh();
     toast({ title: "Resource deleted" });
   };
 
   return (
-    <div className="p-8">
+    <div className="p-8 max-w-4xl">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Resources Manager</h1>
-        <Button variant="teal" onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Add Resource</Button>
+        <h1 className="text-2xl font-bold text-foreground">Resources</h1>
+        <Button variant="teal" onClick={() => setShowForm(s => !s)}>
+          <Plus className="h-4 w-4 mr-1" /> Upload Resource
+        </Button>
       </div>
 
-      <div className="bg-card border border-border rounded-lg overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Access</TableHead>
-              <TableHead>Format</TableHead>
-              <TableHead>Featured</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {resources.map(r => (
-              <TableRow key={r.id}>
-                <TableCell className="font-medium">{r.title}</TableCell>
-                <TableCell><span className={`px-2 py-0.5 rounded-full text-xs font-medium ${categoryColors[r.category] || "bg-muted text-muted-foreground"}`}>{r.category}</span></TableCell>
-                <TableCell className="text-sm">{accessLevelLabels[r.access_level]}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">{r.format}</TableCell>
-                <TableCell>{r.featured && <Star className="h-4 w-4 text-teal fill-teal" />}</TableCell>
-                <TableCell>
-                  <div className="flex gap-2">
-                    <Button variant="ghost" size="icon" onClick={() => openEdit(r)}><Pencil className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleDelete(r.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      <Dialog open={formOpen} onOpenChange={setFormOpen}>
-        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{editId ? "Edit Resource" : "Add Resource"}</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleSave} className="space-y-4">
+      {/* Upload form */}
+      {showForm && (
+        <div className="bg-card border border-border rounded-lg p-6 mb-8">
+          <h2 className="text-base font-semibold mb-4">New Resource</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-sm font-medium block mb-1">Title *</label>
-              <Input required value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} />
+              <label className="text-sm font-medium block mb-1">Name *</label>
+              <Input required value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="e.g. NDPA 2023 Compliance Checklist" />
             </div>
+
             <div>
               <label className="text-sm font-medium block mb-1">Description</label>
-              <Textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
+              <Textarea rows={3} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Brief description of this resource..." />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium block mb-1">Category</label>
-                <select className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}>
-                  {["Data Protection", "Cybersecurity", "AI Governance", "Regulatory Updates", "Training", "General"].map(c => <option key={c}>{c}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="text-sm font-medium block mb-1">Format</label>
-                <select className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={form.format} onChange={e => setForm({ ...form, format: e.target.value })}>
-                  {["PDF", "Word Template", "Excel Checklist", "Guide", "Report", "Other"].map(f => <option key={f}>{f}</option>)}
-                </select>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium block mb-1">Jurisdiction</label>
-                <select className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={form.jurisdiction} onChange={e => setForm({ ...form, jurisdiction: e.target.value })}>
-                  {["Nigeria", "EU/UK", "International", "Multi-jurisdiction"].map(j => <option key={j}>{j}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="text-sm font-medium block mb-1">Access Level</label>
-                <select className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={form.access_level} onChange={e => setForm({ ...form, access_level: e.target.value })}>
-                  {["free", "register", "clients_only"].map(a => <option key={a} value={a}>{accessLevelLabels[a]}</option>)}
-                </select>
-              </div>
-            </div>
+
             <div>
-              <label className="text-sm font-medium block mb-1">Author</label>
-              <Input value={form.author} onChange={e => setForm({ ...form, author: e.target.value })} />
+              <label className="text-sm font-medium block mb-1">Tags</label>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {form.tags.map(tag => (
+                  <span key={tag} className="flex items-center gap-1 bg-teal/10 text-teal text-xs font-medium px-2 py-1 rounded-full">
+                    {tag}
+                    <button type="button" onClick={() => removeTag(tag)}><X className="h-3 w-3" /></button>
+                  </span>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  value={tagInput}
+                  onChange={e => setTagInput(e.target.value)}
+                  onKeyDown={handleTagKeyDown}
+                  placeholder="Type a tag and press Enter"
+                />
+                <Button type="button" variant="outline" onClick={addTag}>Add</Button>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" id="featured" checked={form.featured} onChange={e => setForm({ ...form, featured: e.target.checked })} className="rounded" />
-              <label htmlFor="featured" className="text-sm font-medium">Featured</label>
+
+            <div>
+              <label className="text-sm font-medium block mb-1">File *</label>
+              <div
+                className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-teal transition-colors"
+                onClick={() => fileRef.current?.click()}
+              >
+                {form.file ? (
+                  <p className="text-sm text-foreground font-medium">{form.file.name}</p>
+                ) : (
+                  <>
+                    <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">Click to select a file</p>
+                  </>
+                )}
+              </div>
+              <input
+                ref={fileRef}
+                type="file"
+                className="hidden"
+                onChange={e => setForm(f => ({ ...f, file: e.target.files?.[0] ?? null }))}
+              />
             </div>
-            <Button variant="teal" className="w-full" type="submit">Save Resource</Button>
+
+            <div className="flex gap-3 pt-2">
+              <Button variant="teal" type="submit" disabled={saving}>{saving ? "Uploading..." : "Upload"}</Button>
+              <Button variant="outline" type="button" onClick={() => setShowForm(false)}>Cancel</Button>
+            </div>
           </form>
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
+
+      {/* Resource list */}
+      {resources.length === 0 ? (
+        <div className="text-center py-16 text-muted-foreground">
+          <FileText className="h-10 w-10 mx-auto mb-3 opacity-30" />
+          <p>No resources uploaded yet.</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {resources.map(r => (
+            <div key={r.id} className="bg-card border border-border rounded-lg p-5 flex items-start justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-foreground truncate">{r.title}</p>
+                {r.description && <p className="text-sm text-muted-foreground mt-0.5 line-clamp-1">{r.description}</p>}
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  {r.tags.map(tag => (
+                    <span key={tag} className="bg-teal/10 text-teal text-xs font-medium px-2 py-0.5 rounded-full">{tag}</span>
+                  ))}
+                  <span className="text-xs text-muted-foreground ml-1">{r.fileName}</span>
+                </div>
+              </div>
+              <div className="flex gap-2 shrink-0">
+                <Button variant="outline" size="sm" onClick={() => downloadResource(r)}>Download</Button>
+                <Button variant="ghost" size="icon" onClick={() => handleDelete(r.id)}>
+                  <Trash2 className="h-4 w-4 text-destructive" />
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

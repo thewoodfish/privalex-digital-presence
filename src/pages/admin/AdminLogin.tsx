@@ -5,22 +5,23 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import PrivaLexLogo from "@/components/PrivaLexLogo";
 
+const ADMIN_EMAIL = "admin@privalexadvisory.com";
+const ADMIN_PASSWORD = "PrivaLex2025";
+
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    // Placeholder — will use Supabase auth when Cloud is enabled
-    setTimeout(() => {
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       localStorage.setItem("privalex_admin", "true");
       navigate("/admin");
-      setLoading(false);
-    }, 500);
+    } else {
+      toast({ title: "Invalid credentials", description: "Check your email and password.", variant: "destructive" });
+    }
   };
 
   return (
@@ -40,9 +41,7 @@ const AdminLogin = () => {
             <label className="text-sm font-medium text-foreground block mb-1">Password</label>
             <Input type="password" required value={password} onChange={e => setPassword(e.target.value)} />
           </div>
-          <Button variant="teal" className="w-full" type="submit" disabled={loading}>
-            {loading ? "Signing in..." : "Sign In"}
-          </Button>
+          <Button variant="teal" className="w-full" type="submit">Sign In</Button>
         </form>
       </div>
     </div>
