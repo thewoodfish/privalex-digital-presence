@@ -163,7 +163,18 @@ const AcademyAccreditations = () => {
                           lineHeight: 1.3,
                         }}
                       >
-                        {acc.fullName}
+                        {acc.acronym === "PECB" ? (
+                          <a
+                            href="https://pecb.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: NAVY, textDecoration: "underline", textDecorationColor: `${GOLD}80` }}
+                          >
+                            {acc.fullName}
+                          </a>
+                        ) : (
+                          acc.fullName
+                        )}
                       </h2>
                     </div>
                     <span

@@ -19,6 +19,8 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import ResourcesManager from "./pages/admin/ResourcesManager";
 import EventsNews from "./pages/EventsNews";
 import DPIAScreeningTool from "./pages/DPIAScreeningTool";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfUse from "./pages/TermsOfUse";
 import NotFound from "./pages/NotFound";
 import AcademyLayout from "./pages/academy/AcademyLayout";
 import AcademyHome from "./pages/academy/AcademyHome";
@@ -54,6 +56,8 @@ const App = () => (
             <Route path="/services/ai-governance" element={<AIGovernance />} />
             <Route path="/events-news" element={<EventsNews />} />
             <Route path="/dpia-screening-tool" element={<DPIAScreeningTool />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-use" element={<TermsOfUse />} />
           </Route>
 
           {/* Admin routes */}

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
+import { Linkedin, Twitter } from "lucide-react";
 
 const GOLD = "#F4A623";
 const NAVY = "#2C3E6B";
@@ -318,10 +319,40 @@ const AcademyFooter = () => (
             Nigeria's most complete professional certification and training school for data protection,
             information security, cybersecurity, and AI governance.
           </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem", marginBottom: "1rem" }}>
             <span style={{ fontSize: "0.78rem", opacity: 0.5 }}>PECB Authorised Training Partner</span>
             <span style={{ fontSize: "0.78rem", opacity: 0.5 }}>IIM Accredited</span>
             <span style={{ fontSize: "0.78rem", opacity: 0.5 }}>NBA-ICLE Accredited</span>
+          </div>
+          <div style={{ display: "flex", gap: "0.5rem" }}>
+            <a
+              href="https://www.linkedin.com/company/privalex-academy"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              style={{
+                width: "32px", height: "32px", borderRadius: "6px",
+                background: "rgba(255,255,255,0.1)", display: "flex",
+                alignItems: "center", justifyContent: "center",
+                color: "rgba(255,255,255,0.6)", textDecoration: "none",
+              }}
+            >
+              <Linkedin size={16} />
+            </a>
+            <a
+              href="https://twitter.com/PrivaLexAcademy"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="X / Twitter"
+              style={{
+                width: "32px", height: "32px", borderRadius: "6px",
+                background: "rgba(255,255,255,0.1)", display: "flex",
+                alignItems: "center", justifyContent: "center",
+                color: "rgba(255,255,255,0.6)", textDecoration: "none",
+              }}
+            >
+              <Twitter size={16} />
+            </a>
           </div>
         </div>
 

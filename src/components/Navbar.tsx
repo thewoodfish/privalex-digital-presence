@@ -33,7 +33,7 @@ const navItems: NavItem[] = [
   {
     label: "Resource Library",
     dropdown: [
-      { label: "Articles", href: "/insights" },
+      { label: "Insights & Blog", href: "/insights" },
       { label: "Templates", href: "/resources?format=Template" },
       { label: "Toolkits", href: "/toolkits" },
       { label: "Client Briefings", href: "/resources?format=Briefing" },
