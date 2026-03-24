@@ -5,7 +5,7 @@ const PrivaLexLogo = ({ className = "", variant = "default" }: { className?: str
         src="/Logo/12.png"
         alt="PrivaLex Advisory"
         style={{
-          height: "40px",
+          height: "44px",
           width: "auto",
           filter: variant === "white" ? "brightness(0) invert(1)" : "none",
         }}
