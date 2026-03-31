@@ -1,7 +1,7 @@
 import { type ReactNode, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, ArrowRight, Newspaper } from "lucide-react";
+import { Calendar, MapPin, ArrowRight } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { getEvents, type EventItem } from "@/lib/events";
 import { getPhotos, type GalleryPhoto } from "@/lib/gallery";
@@ -22,7 +22,6 @@ const fallbackEvents: EventItem[] = [
   },
 ];
 
-const newsItems: { title: string; date: string; excerpt: string }[] = [];
 
 const isPast = (dateStr: string): boolean => {
   const parsed = new Date(dateStr);
@@ -32,7 +31,7 @@ const isPast = (dateStr: string): boolean => {
 
 const EventsNews = () => {
   const eventsRef = useScrollReveal();
-  const newsRef = useScrollReveal();
+
   const [allEvents, setAllEvents] = useState<EventItem[]>(fallbackEvents);
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
 
@@ -191,39 +190,6 @@ const EventsNews = () => {
                 Event photos will be uploaded here following each event.
               </p>
             </div>
-          )}
-        </div>
-      </section>
-
-      {/* News & Announcements */}
-      <section className="py-20 bg-light-grey">
-        <div
-          ref={newsRef.ref}
-          className={`container mx-auto px-4 transition-all duration-700 ${newsRef.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
-        >
-          <SectionLabel>News & Announcements</SectionLabel>
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-12">
-            Firm News
-          </h2>
-          {newsItems.length > 0 ? (
-            <div className="grid md:grid-cols-3 gap-6">
-              {newsItems.map((item, i) => (
-                <div key={i} className="bg-card border border-border rounded-xl p-7 hover:shadow-md hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 right-0 h-[3px] bg-teal rounded-t-xl" />
-                  <div className="flex items-center gap-2 mb-3">
-                    <Newspaper className="h-4 w-4 text-teal" />
-                    <span className="text-xs text-muted-foreground">{item.date}</span>
-                  </div>
-                  <h3 className="font-semibold text-foreground mb-2">{item.title}</h3>
-                  <p className="text-muted-foreground text-sm mb-4">{item.excerpt}</p>
-                  <span className="text-teal text-sm font-medium inline-flex items-center gap-1 hover:gap-2 transition-all cursor-pointer">
-                    Read more <ArrowRight className="h-3.5 w-3.5" />
-                  </span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-muted-foreground">News and announcements will appear here.</p>
           )}
         </div>
       </section>
