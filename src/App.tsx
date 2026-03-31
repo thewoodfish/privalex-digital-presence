@@ -17,6 +17,9 @@ import AIGovernance from "./pages/services/AIGovernance";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminLayout from "./pages/admin/AdminLayout";
 import ResourcesManager from "./pages/admin/ResourcesManager";
+import EventsManager from "./pages/admin/EventsManager";
+import InsightsManager from "./pages/admin/InsightsManager";
+import GalleryManager from "./pages/admin/GalleryManager";
 import EventsNews from "./pages/EventsNews";
 import DPIAScreeningTool from "./pages/DPIAScreeningTool";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -67,6 +70,9 @@ const App = () => (
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Navigate to="/admin/resources" replace />} />
             <Route path="resources" element={<ResourcesManager />} />
+            <Route path="insights" element={<InsightsManager />} />
+            <Route path="events" element={<EventsManager />} />
+            <Route path="gallery" element={<GalleryManager />} />
           </Route>
 
           {/* Academy routes */}

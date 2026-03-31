@@ -185,7 +185,9 @@ const AcademyNavbar = () => {
               PrivaLex Advisory
             </Link>
             <a
-              href="mailto:training@privalexadvisory.com"
+              href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=Sm8Hm1zvUU22BEzeGU8Gv4G5gXNLzeBIrBgUsxWYmJlUQ0ZZNzFBVVhFVDBOVjlERVNRWUFCSVpUUS4u"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 background: GOLD,
                 color: "#fff",
@@ -272,7 +274,9 @@ const AcademyNavbar = () => {
             ))}
             <div style={{ marginTop: "0.75rem", display: "flex", flexDirection: "column", gap: "0.5rem", padding: "0 0.5rem" }}>
               <a
-                href="mailto:training@privalexadvisory.com"
+                href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=Sm8Hm1zvUU22BEzeGU8Gv4G5gXNLzeBIrBgUsxWYmJlUQ0ZZNzFBVVhFVDBOVjlERVNRWUFCSVpUUS4u"
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   background: GOLD,
                   color: "#fff",

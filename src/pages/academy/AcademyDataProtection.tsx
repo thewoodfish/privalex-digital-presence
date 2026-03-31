@@ -60,6 +60,20 @@ const programmes: Programme[] = [
       "To register, click the 'Register Now' button at the top of this page. Complete the registration form with your full name, organisation, email address, and billing details. You will receive a booking confirmation within one business day. Payment can be made by bank transfer (USD), card, or institutional purchase order. Corporate registrations for three or more participants qualify for group pricing — contact us at training@privalexadvisory.com to discuss.",
   },
   {
+    badge: "PRACTITIONER PROGRAMME — PRIVALEX FLAGSHIP",
+    title: "Data Protection Practitioner (DPP)",
+    meta: {
+      duration: "8 Weeks | 3 Cohorts Per Year",
+      credential: "PrivaLex Academy DPP Certificate",
+      idealFor:
+        "Compliance Professionals, Legal Practitioners, Tech Experts, Career Changers & Graduates — Nigeria & International",
+    },
+    about:
+      "The Data Protection Practitioner (DPP) is built for professionals who want to do the work, not just understand it. While most training programmes stop at knowledge transfer, the DPP goes further — equipping participants with the practical judgement, tools, and hands-on experience to operate confidently as data protection professionals in real organisational environments. Over eight weeks, participants work through the full range of practitioner competencies: legal frameworks and their operational application, data subject rights management, privacy impact assessments, breach response, international data transfers, governance design, and privacy training delivery. Every module is anchored in live exercises, case studies, and real deliverables. Participants complete four substantive projects during the programme and graduate with a portfolio that demonstrates what they can actually do. Instruction is delivered by active practitioners across data protection, privacy engineering, and compliance — professionals who manage these issues for organisations every day. The DPP covers the Nigeria Data Protection Act 2023, the EU GDPR, the UK GDPR, and other key frameworks, giving participants a globally relevant perspective that travels with them wherever they practise. Cohort sizes are kept deliberately small to ensure depth of engagement and individual attention throughout.",
+    howToRegister:
+      "To register, click the 'Register Now' button at the top of this page. Complete the registration form with your full name, organisation, email address, and billing details. You will receive a booking confirmation within one business day. Payment can be made by bank transfer (NGN), card, or institutional purchase order. Corporate registrations for three or more participants qualify for group pricing — contact us at training@privalexadvisory.com to discuss.",
+  },
+  {
     badge: "AUDITOR",
     title: "GDPR Lead Auditor",
     meta: {
@@ -399,7 +413,7 @@ const AcademyDataProtection = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-4 gap-5">
             {[
               {
                 name: "Participant",
@@ -423,9 +437,18 @@ const AcademyDataProtection = () => {
                 name: "Participant",
                 jobTitle: "Legal Counsel",
                 organisation: "Multinational Corporation",
-                programme: "Advanced Data Protection Practitioner (ADPP)",
+                programme: "Data Protection Practitioner (DPP)",
                 review:
-                  "The ADPP is unlike any other programme I have attended. The multi-jurisdictional depth and the quality of instruction are genuinely exceptional.",
+                  "The DPP is unlike any other programme I have attended. The multi-jurisdictional depth and the quality of instruction are genuinely exceptional.",
+                stars: 5,
+              },
+              {
+                name: "Participant",
+                jobTitle: "Compliance Officer",
+                organisation: "Public Sector Organisation",
+                programme: "Data Protection Practitioner (DPP)",
+                review:
+                  "The DPP gave me the practical tools to implement a full data protection programme from day one. The portfolio projects were challenging but exactly what I needed to prove my competence to my organisation.",
                 stars: 5,
               },
             ].map((t, i) => (

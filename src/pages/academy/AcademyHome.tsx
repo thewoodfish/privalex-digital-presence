@@ -495,7 +495,7 @@ const AcademyHome = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-4 gap-5">
             {[
               {
                 name: "Participant",
@@ -519,9 +519,18 @@ const AcademyHome = () => {
                 name: "Participant",
                 jobTitle: "Legal Counsel",
                 organisation: "Multinational Corporation",
-                programme: "Advanced Data Protection Practitioner (ADPP)",
+                programme: "Data Protection Practitioner (DPP)",
                 review:
-                  "The ADPP is unlike any other programme I have attended. The multi-jurisdictional depth and the quality of instruction are genuinely exceptional.",
+                  "The DPP is unlike any other programme I have attended. The multi-jurisdictional depth and the quality of instruction are genuinely exceptional.",
+                stars: 5,
+              },
+              {
+                name: "Participant",
+                jobTitle: "Compliance Officer",
+                organisation: "Public Sector Organisation",
+                programme: "Data Protection Practitioner (DPP)",
+                review:
+                  "The DPP gave me the practical tools to implement a full data protection programme from day one. The portfolio projects were challenging but exactly what I needed to prove my competence to my organisation.",
                 stars: 5,
               },
             ].map((t, i) => (

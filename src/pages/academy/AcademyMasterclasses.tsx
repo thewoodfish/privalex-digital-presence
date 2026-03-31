@@ -309,7 +309,9 @@ const AcademyMasterclasses = () => {
                 MCLE certificate after each qualifying session.
               </p>
               <a
-                href="mailto:training@privalexadvisory.com"
+                href="https://forms.zohopublic.eu/confidenceamudaprivalex1/form/DataProtectionComplianceAuditsBuildingtheEvidenceP/formperma/y-R7CNH1NVaD5X2TLK1dOczWLO40w3bgUmmtozOKRaY"
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   display: "inline-block",
                   background: GOLD,

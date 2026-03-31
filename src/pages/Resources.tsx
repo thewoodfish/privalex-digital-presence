@@ -6,21 +6,38 @@ import { seedResources, categoryColors } from "@/data/seedData";
 import { Search, FileText, Download } from "lucide-react";
 import { getResources, type AdminResource } from "@/lib/resources";
 
+const triggerDownload = async (url: string, fileName: string) => {
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = fileName;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  } catch {
+    window.open(url, "_blank");
+  }
+};
+
 const categories = ["All", "Data Protection", "Cybersecurity", "AI Governance", "Regulatory Updates", "Training"];
 
-const formatMeta: Record<string, { title: string; description: string }> = {
+const formatMeta: Record<string, { title: string; description: string; category: string }> = {
   Template: {
     title: "Templates",
+    category: "Templates",
     description:
       "Practical compliance tools, built by practitioners. Every template in this library is aligned to the NDPA 2023, the GAID 2025, and international best practice, and drafted to meet the standard regulators actually apply. Use them as a starting point or speak to our team if your situation calls for something tailored.",
   },
   Briefing: {
     title: "Client Briefings",
+    category: "Client Briefings",
     description:
       "Regulatory intelligence from the people who practise in this space every day. PrivaLex Advisory's client briefings cover enforcement actions, legislative developments, and compliance obligations across Nigeria, the UK, and international data protection frameworks.",
   },
   Journal: {
     title: "PrivaLex Journal",
+    category: "Journal",
     description:
       "The PrivaLex Journal delivers in-depth analysis of data protection law, AI governance, information security, and technology policy, with a focus on African regulatory developments and their global implications. Produced to the standard that practitioners, academics, and policymakers can cite, rely on, and build from.",
   },
@@ -50,10 +67,11 @@ const Resources = () => {
     return true;
   });
 
+  const activeCategory = formatParam ? formatMeta[formatParam]?.category : null;
+
   const filteredUploaded = uploaded.filter(r => {
-    if (formatParam && !r.tags?.includes(formatParam)) return false;
+    if (activeCategory && r.category !== activeCategory) return false;
     if (search && !r.title.toLowerCase().includes(search.toLowerCase()) && !r.description.toLowerCase().includes(search.toLowerCase())) return false;
-    if (category !== "All" && !r.tags?.includes(category)) return false;
     return true;
   });
 
@@ -107,11 +125,9 @@ const Resources = () => {
                         <span key={tag} className={`px-2 py-0.5 rounded-full text-xs font-medium ${categoryColors[tag] || "bg-muted text-muted-foreground"}`}>{tag}</span>
                       ))}
                     </div>
-                    <a href={r.file_url} target="_blank" rel="noopener noreferrer" className="w-full block">
-                      <Button variant="teal" size="sm" className="w-full">
-                        <Download className="h-4 w-4 mr-1" /> Download
-                      </Button>
-                    </a>
+                    <Button variant="teal" size="sm" className="w-full" onClick={() => triggerDownload(r.file_url, r.file_name)}>
+                      <Download className="h-4 w-4 mr-1" /> Download
+                    </Button>
                   </div>
                 ))}
               </div>

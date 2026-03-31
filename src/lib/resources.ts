@@ -4,11 +4,14 @@ export interface AdminResource {
   id: string;
   title: string;
   description: string;
+  category: string;
   tags: string[];
   file_name: string;
   file_url: string;
   created_at: string;
 }
+
+export const RESOURCE_CATEGORIES = ["Templates", "Journal", "Client Briefings"] as const;
 
 const BUCKET = "resources";
 
@@ -24,6 +27,7 @@ export async function getResources(): Promise<AdminResource[]> {
 export async function uploadResource(
   title: string,
   description: string,
+  category: string,
   tags: string[],
   file: File
 ): Promise<void> {
@@ -39,6 +43,7 @@ export async function uploadResource(
   const { error: insertError } = await supabase.from("resources").insert({
     title,
     description,
+    category,
     tags,
     file_name: file.name,
     file_url: urlData.publicUrl,

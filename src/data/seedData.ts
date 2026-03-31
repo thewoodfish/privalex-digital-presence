@@ -4,7 +4,7 @@ export const seedTestimonials = [
     quote: "PrivaLex Advisory helped us build a complete NDPA compliance programme in under three months. Their depth of knowledge and practical approach is unlike anything else available in this market.",
     client_name: "Head of Compliance",
     client_title: "Head of Compliance",
-    organisation: "Major Nigerian Bank",
+    organisation: "Micro Finance Bank",
     rating: 5,
     active: true,
     display_order: 1,

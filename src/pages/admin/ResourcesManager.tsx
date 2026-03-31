@@ -4,9 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Trash2, X, FileText, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { getResources, uploadResource, deleteResource, type AdminResource } from "@/lib/resources";
+import { getResources, uploadResource, deleteResource, type AdminResource, RESOURCE_CATEGORIES } from "@/lib/resources";
 
-const emptyForm = { title: "", description: "", tags: [] as string[], file: null as File | null };
+const emptyForm = { title: "", description: "", category: "Templates", tags: [] as string[], file: null as File | null };
 
 const ResourcesManager = () => {
   const { toast } = useToast();
@@ -47,7 +47,7 @@ const ResourcesManager = () => {
     if (!form.file) { toast({ title: "Please select a file", variant: "destructive" }); return; }
     setSaving(true);
     try {
-      await uploadResource(form.title, form.description, form.tags, form.file);
+      await uploadResource(form.title, form.description, form.category, form.tags, form.file);
       toast({ title: "Resource uploaded" });
       setForm(emptyForm);
       setTagInput("");
@@ -90,6 +90,18 @@ const ResourcesManager = () => {
             <div>
               <label className="text-sm font-medium block mb-1">Description</label>
               <Textarea rows={3} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Brief description of this resource..." />
+            </div>
+            <div>
+              <label className="text-sm font-medium block mb-1">Category *</label>
+              <select
+                value={form.category}
+                onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
+                className="w-full border border-input rounded-md px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-teal"
+              >
+                {RESOURCE_CATEGORIES.map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="text-sm font-medium block mb-1">Tags</label>
@@ -146,6 +158,9 @@ const ResourcesManager = () => {
                 <p className="font-semibold text-foreground truncate">{r.title}</p>
                 {r.description && <p className="text-sm text-muted-foreground mt-0.5 line-clamp-1">{r.description}</p>}
                 <div className="flex flex-wrap gap-1.5 mt-2">
+                  {r.category && (
+                    <span className="bg-navy/10 text-navy text-xs font-semibold px-2 py-0.5 rounded-full">{r.category}</span>
+                  )}
                   {r.tags?.map(tag => (
                     <span key={tag} className="bg-teal/10 text-teal text-xs font-medium px-2 py-0.5 rounded-full">{tag}</span>
                   ))}

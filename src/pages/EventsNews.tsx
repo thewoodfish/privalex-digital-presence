@@ -1,32 +1,52 @@
-import { type ReactNode } from "react";
+import { type ReactNode, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, ArrowRight, Newspaper } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { getEvents, type EventItem } from "@/lib/events";
+import { getPhotos, type GalleryPhoto } from "@/lib/gallery";
 
 const SectionLabel = ({ children }: { children: ReactNode }) => (
   <p className="text-teal text-sm font-semibold uppercase tracking-widest mb-3">{children}</p>
 );
 
-const upcomingEvents = [
+const fallbackEvents: EventItem[] = [
   {
-    name: "Data Protection Compliance Summit 2025",
+    id: "default-1",
+    name: "Data Protection Compliance Summit 2026",
     date: "To be announced",
-    location: "Lagos, Nigeria",
+    venue: "Lagos, Nigeria",
     description:
       "PrivaLex Advisory's flagship annual compliance summit bringing together data protection officers, legal practitioners, and regulators across Nigeria and West Africa.",
-    cta: "Register Interest",
-    ctaHref: "/contact",
+    register_link: "/contact",
   },
 ];
 
-const pastEvents: { name: string; date: string; summary: string }[] = [];
-
 const newsItems: { title: string; date: string; excerpt: string }[] = [];
+
+const isPast = (dateStr: string): boolean => {
+  const parsed = new Date(dateStr);
+  if (isNaN(parsed.getTime())) return false;
+  return parsed < new Date();
+};
 
 const EventsNews = () => {
   const eventsRef = useScrollReveal();
   const newsRef = useScrollReveal();
+  const [allEvents, setAllEvents] = useState<EventItem[]>(fallbackEvents);
+  const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
+
+  useEffect(() => {
+    getEvents()
+      .then((data) => { if (data.length > 0) setAllEvents(data); })
+      .catch(() => {});
+    getPhotos()
+      .then(setPhotos)
+      .catch(() => {});
+  }, []);
+
+  const upcomingEvents = allEvents.filter((e) => !isPast(e.date));
+  const pastEvents = allEvents.filter((e) => isPast(e.date));
 
   return (
     <div>
@@ -79,16 +99,24 @@ const EventsNews = () => {
                         </span>
                         <span className="flex items-center gap-1.5">
                           <MapPin className="h-4 w-4 text-teal" />
-                          {event.location}
+                          {event.venue}
                         </span>
                       </div>
                       <p className="text-muted-foreground leading-relaxed">{event.description}</p>
                     </div>
-                    <Button variant="teal" size="sm" asChild className="flex-shrink-0">
-                      <Link to={event.ctaHref}>
-                        {event.cta} <ArrowRight className="h-3.5 w-3.5" />
-                      </Link>
-                    </Button>
+                    {event.register_link && (
+                      <Button variant="teal" size="sm" asChild className="flex-shrink-0">
+                        {event.register_link.startsWith("http") ? (
+                          <a href={event.register_link} target="_blank" rel="noopener noreferrer">
+                            Register Now <ArrowRight className="h-3.5 w-3.5" />
+                          </a>
+                        ) : (
+                          <Link to={event.register_link}>
+                            Register Interest <ArrowRight className="h-3.5 w-3.5" />
+                          </Link>
+                        )}
+                      </Button>
+                    )}
                   </div>
                 </div>
               ))}
@@ -111,8 +139,15 @@ const EventsNews = () => {
               {pastEvents.map((event, i) => (
                 <div key={i} className="bg-card border border-border rounded-xl p-6">
                   <h3 className="font-semibold text-foreground mb-1">{event.name}</h3>
-                  <p className="text-sm text-muted-foreground mb-2">{event.date}</p>
-                  <p className="text-sm text-muted-foreground">{event.summary}</p>
+                  <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-2">
+                    <span className="flex items-center gap-1.5">
+                      <Calendar className="h-4 w-4 text-teal" />{event.date}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <MapPin className="h-4 w-4 text-teal" />{event.venue}
+                    </span>
+                  </div>
+                  {event.description && <p className="text-sm text-muted-foreground">{event.description}</p>}
                 </div>
               ))}
             </div>
@@ -132,13 +167,31 @@ const EventsNews = () => {
           <p className="text-muted-foreground mb-12">
             Post-event photography from PrivaLex Advisory events and engagements.
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {photos.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {photos.map((photo) => (
+                <div key={photo.id} className="group relative rounded-xl overflow-hidden border border-border bg-card hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                  <img
+                    src={photo.photo_url}
+                    alt={photo.description}
+                    className="w-full h-52 object-cover"
+                  />
+                  {(photo.description || photo.date) && (
+                    <div className="p-3">
+                      {photo.date && <p className="text-xs text-teal font-medium mb-1">{photo.date}</p>}
+                      {photo.description && <p className="text-sm text-muted-foreground line-clamp-2">{photo.description}</p>}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
             <div className="col-span-full bg-light-grey rounded-xl p-16 text-center border border-dashed border-border">
               <p className="text-muted-foreground text-sm">
                 Event photos will be uploaded here following each event.
               </p>
             </div>
-          </div>
+          )}
         </div>
       </section>
 

@@ -1,10 +1,13 @@
 import { useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { FileText, LogOut } from "lucide-react";
+import { FileText, LogOut, CalendarDays, Images, BookOpen } from "lucide-react";
 import PrivaLexLogo from "@/components/PrivaLexLogo";
 
 const sidebarLinks = [
   { label: "Resources", href: "/admin/resources", icon: FileText },
+  { label: "Insights", href: "/admin/insights", icon: BookOpen },
+  { label: "Events", href: "/admin/events", icon: CalendarDays },
+  { label: "Gallery", href: "/admin/gallery", icon: Images },
 ];
 
 const AdminLayout = () => {

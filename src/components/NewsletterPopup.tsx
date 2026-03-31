@@ -1,20 +1,16 @@
 import { useState, useEffect } from "react";
 import { X, ArrowRight } from "lucide-react";
 
-const STORAGE_KEY = "privalex_newsletter_dismissed";
-
 const NewsletterPopup = () => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem(STORAGE_KEY)) return;
     const timer = setTimeout(() => setVisible(true), 3000);
     return () => clearTimeout(timer);
   }, []);
 
   const dismiss = () => {
     setVisible(false);
-    localStorage.setItem(STORAGE_KEY, "1");
   };
 
   if (!visible) return null;

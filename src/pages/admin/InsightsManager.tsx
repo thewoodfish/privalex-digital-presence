@@ -1,144 +1,209 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { PlusCircle, Trash2, Pencil, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { seedArticles, categoryColors } from "@/data/seedData";
-import { Plus, Pencil, Trash2, Eye } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  getInsights, createInsight, updateInsight, deleteInsight,
+  generateSlug, type Insight,
+} from "@/lib/insights";
 
-const generateSlug = (title: string) => title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+const empty = (): Omit<Insight, "id" | "created_at"> => ({
+  title: "",
+  slug: "",
+  author: "PrivaLex Advisory",
+  tag: "",
+  body: "",
+  published_at: new Date().toISOString().slice(0, 10),
+});
 
 const InsightsManager = () => {
+  const [insights, setInsights] = useState<Insight[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState(empty());
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
   const { toast } = useToast();
-  const [articles, setArticles] = useState(seedArticles);
-  const [formOpen, setFormOpen] = useState(false);
-  const [editId, setEditId] = useState<string | null>(null);
-  const [form, setForm] = useState({
-    title: "", slug: "", category: "Nigeria & NDPA", author: "PrivaLex Advisory",
-    excerpt: "", body: "", published: false, featured: false, read_time: 5,
-  });
 
-  const openNew = () => {
-    setEditId(null);
-    setForm({ title: "", slug: "", category: "Nigeria & NDPA", author: "PrivaLex Advisory", excerpt: "", body: "", published: false, featured: false, read_time: 5 });
-    setFormOpen(true);
-  };
-
-  const openEdit = (a: typeof articles[0]) => {
-    setEditId(a.id);
-    setForm({ title: a.title, slug: a.slug, category: a.category, author: a.author, excerpt: a.excerpt || "", body: a.body, published: a.published, featured: a.featured, read_time: a.read_time });
-    setFormOpen(true);
-  };
-
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    const slug = form.slug || generateSlug(form.title);
-    if (editId) {
-      setArticles(articles.map(a => a.id === editId ? { ...a, ...form, slug } as any : a));
-      toast({ title: "Article updated" });
-    } else {
-      setArticles([...articles, { ...form, slug, id: Date.now().toString(), publication_date: new Date().toISOString().split("T")[0] } as any]);
-      toast({ title: "Article created" });
+  const load = async () => {
+    try {
+      setInsights(await getInsights());
+    } catch {
+      toast({ title: "Failed to load insights", variant: "destructive" });
+    } finally {
+      setLoading(false);
     }
-    setFormOpen(false);
   };
 
-  const handleDelete = (id: string) => {
-    setArticles(articles.filter(a => a.id !== id));
-    toast({ title: "Article deleted" });
+  useEffect(() => { load(); }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setForm((f) => ({
+      ...f,
+      [name]: value,
+      ...(name === "title" && !editingId ? { slug: generateSlug(value) } : {}),
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.title.trim() || !form.author.trim() || !form.body.trim()) {
+      toast({ title: "Title, author and details are required.", variant: "destructive" });
+      return;
+    }
+    setSaving(true);
+    try {
+      if (editingId) {
+        await updateInsight(editingId, form);
+        toast({ title: "Insight updated" });
+      } else {
+        await createInsight(form);
+        toast({ title: "Insight published" });
+      }
+      setForm(empty());
+      setEditingId(null);
+      setShowForm(false);
+      await load();
+    } catch (err: any) {
+      toast({ title: "Failed to save", description: err.message, variant: "destructive" });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleEdit = (insight: Insight) => {
+    setForm({
+      title: insight.title,
+      slug: insight.slug,
+      author: insight.author,
+      tag: insight.tag,
+      body: insight.body,
+      published_at: insight.published_at,
+    });
+    setEditingId(insight.id);
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteInsight(id);
+      toast({ title: "Insight deleted" });
+      if (editingId === id) { setForm(empty()); setEditingId(null); setShowForm(false); }
+      await load();
+    } catch (err: any) {
+      toast({ title: "Failed to delete", description: err.message, variant: "destructive" });
+    }
+  };
+
+  const handleCancel = () => {
+    setForm(empty());
+    setEditingId(null);
+    setShowForm(false);
   };
 
   return (
     <div className="p-8">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Insights Manager</h1>
-        <Button variant="teal" onClick={openNew}><Plus className="h-4 w-4 mr-1" /> New Article</Button>
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-3">
+          <BookOpen className="h-6 w-6 text-teal" />
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Insights Manager</h1>
+            <p className="text-sm text-muted-foreground">Publish and manage insight articles shown on the Insights page.</p>
+          </div>
+        </div>
+        {!showForm && (
+          <Button variant="teal" onClick={() => setShowForm(true)} className="flex items-center gap-2">
+            <PlusCircle className="h-4 w-4" /> New Insight
+          </Button>
+        )}
       </div>
 
-      <div className="bg-card border border-border rounded-lg overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {articles.map(a => (
-              <TableRow key={a.id}>
-                <TableCell className="font-medium max-w-xs truncate">{a.title}</TableCell>
-                <TableCell><span className={`px-2 py-0.5 rounded-full text-xs font-medium ${categoryColors[a.category] || "bg-muted text-muted-foreground"}`}>{a.category}</span></TableCell>
-                <TableCell><span className={`px-2 py-0.5 rounded-full text-xs font-medium ${a.published ? "bg-emerald-100 text-emerald-800" : "bg-muted text-muted-foreground"}`}>{a.published ? "Published" : "Draft"}</span></TableCell>
-                <TableCell className="text-sm text-muted-foreground">{a.publication_date}</TableCell>
-                <TableCell>
-                  <div className="flex gap-2">
-                    <Button variant="ghost" size="icon" onClick={() => openEdit(a)}><Pencil className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleDelete(a.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      <Dialog open={formOpen} onOpenChange={setFormOpen}>
-        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{editId ? "Edit Article" : "New Article"}</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleSave} className="space-y-4">
+      {/* Form */}
+      {showForm && (
+        <div className="bg-card border border-border rounded-xl p-6 mb-10">
+          <h2 className="font-semibold text-foreground mb-5">
+            {editingId ? "Edit Insight" : "New Insight"}
+          </h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-sm font-medium block mb-1">Title *</label>
-              <Input required value={form.title} onChange={e => setForm({ ...form, title: e.target.value, slug: generateSlug(e.target.value) })} />
+              <label className="text-sm font-medium text-foreground block mb-1">Title *</label>
+              <Input name="title" value={form.title} onChange={handleChange} placeholder="e.g. What the NDPA Means for Data Controllers" />
             </div>
-            <div>
-              <label className="text-sm font-medium block mb-1">Slug</label>
-              <Input value={form.slug} onChange={e => setForm({ ...form, slug: e.target.value })} />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-3 gap-4">
               <div>
-                <label className="text-sm font-medium block mb-1">Category</label>
-                <select className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}>
-                  {["Nigeria & NDPA", "Cybersecurity", "AI Governance", "Data Protection", "Regulatory Updates"].map(c => <option key={c}>{c}</option>)}
-                </select>
+                <label className="text-sm font-medium text-foreground block mb-1">Author *</label>
+                <Input name="author" value={form.author} onChange={handleChange} placeholder="e.g. PrivaLex Advisory" />
               </div>
               <div>
-                <label className="text-sm font-medium block mb-1">Author</label>
-                <Input value={form.author} onChange={e => setForm({ ...form, author: e.target.value })} />
+                <label className="text-sm font-medium text-foreground block mb-1">Tag</label>
+                <Input name="tag" value={form.tag} onChange={handleChange} placeholder="e.g. Nigeria & NDPA" />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-foreground block mb-1">Publication Date</label>
+                <Input name="published_at" type="date" value={form.published_at} onChange={handleChange} />
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium block mb-1">Excerpt</label>
-              <Textarea rows={2} maxLength={150} value={form.excerpt} onChange={e => setForm({ ...form, excerpt: e.target.value })} />
-            </div>
-            <div>
-              <label className="text-sm font-medium block mb-1">Body (HTML)</label>
-              <Textarea rows={10} value={form.body} onChange={e => setForm({ ...form, body: e.target.value })} />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium block mb-1">Read Time (min)</label>
-                <Input type="number" value={form.read_time} onChange={e => setForm({ ...form, read_time: parseInt(e.target.value) || 5 })} />
-              </div>
-            </div>
-            <div className="flex gap-6">
-              <label className="flex items-center gap-2 text-sm font-medium">
-                <input type="checkbox" checked={form.published} onChange={e => setForm({ ...form, published: e.target.checked })} className="rounded" /> Published
+              <label className="text-sm font-medium text-foreground block mb-1">
+                Slug <span className="text-muted-foreground font-normal">(auto-generated, editable)</span>
               </label>
-              <label className="flex items-center gap-2 text-sm font-medium">
-                <input type="checkbox" checked={form.featured} onChange={e => setForm({ ...form, featured: e.target.checked })} className="rounded" /> Featured
-              </label>
+              <Input name="slug" value={form.slug} onChange={handleChange} placeholder="url-friendly-title" />
             </div>
-            <Button variant="teal" className="w-full" type="submit">Save Article</Button>
+            <div>
+              <label className="text-sm font-medium text-foreground block mb-1">Details *</label>
+              <Textarea
+                name="body"
+                value={form.body}
+                onChange={handleChange}
+                placeholder="Write the full article content here..."
+                rows={12}
+                className="font-mono text-sm"
+              />
+              <p className="text-xs text-muted-foreground mt-1">You can use HTML tags for formatting e.g. &lt;p&gt;, &lt;h2&gt;, &lt;strong&gt;, &lt;ul&gt;&lt;li&gt;</p>
+            </div>
+            <div className="flex gap-3">
+              <Button type="submit" variant="teal" disabled={saving} className="flex items-center gap-2">
+                <PlusCircle className="h-4 w-4" />
+                {saving ? "Saving..." : editingId ? "Update Insight" : "Publish Insight"}
+              </Button>
+              <Button type="button" variant="outline" onClick={handleCancel}>Cancel</Button>
+            </div>
           </form>
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
+
+      {/* List */}
+      <h2 className="font-semibold text-foreground mb-4">Published Insights ({insights.length})</h2>
+      {loading ? (
+        <p className="text-muted-foreground text-sm">Loading...</p>
+      ) : insights.length === 0 ? (
+        <p className="text-muted-foreground text-sm">No insights published yet.</p>
+      ) : (
+        <div className="space-y-3">
+          {insights.map((insight) => (
+            <div key={insight.id} className="bg-card border border-border rounded-xl p-5 flex flex-wrap gap-4 items-start justify-between">
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-foreground mb-1">{insight.title}</h3>
+                <p className="text-sm text-muted-foreground">
+                  By {insight.author} · {insight.published_at} · <span className="text-teal">/insights/{insight.slug}</span>
+                </p>
+              </div>
+              <div className="flex gap-2 flex-shrink-0">
+                <Button variant="outline" size="sm" onClick={() => handleEdit(insight)}>
+                  <Pencil className="h-3.5 w-3.5" />
+                </Button>
+                <Button variant="destructive" size="sm" onClick={() => handleDelete(insight.id)}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
