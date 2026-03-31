@@ -175,7 +175,9 @@ const AcademyHome = () => {
               EXPLORE PROGRAMMES
             </Link>
             <a
-              href="mailto:training@privalexadvisory.com"
+              href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=Sm8Hm1zvUU22BEzeGU8Gv4G5gXNLzeBIrBgUsxWYmJlUQ0ZZNzFBVVhFVDBOVjlERVNRWUFCSVpUUS4u"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 background: "rgba(255,255,255,0.1)",
                 color: "#fff",
