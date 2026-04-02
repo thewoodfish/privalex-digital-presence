@@ -11,7 +11,7 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "../src"),
     },
-    dedupe: ["react", "react-dom", "react/jsx-runtime"],
+    dedupe: ["react", "react-dom", "react/jsx-runtime", "react-router-dom"],
   },
   build: {
     outDir: "dist",
