@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Linkedin, Twitter } from "lucide-react";
 
 const GOLD = "#F4A623";
@@ -167,8 +167,8 @@ const AcademyNavbar = () => {
 
           {/* Right actions */}
           <div className="hidden lg:flex items-center gap-3">
-            <Link
-              to="/"
+            <a
+              href="https://www.privalexadvisory.com"
               style={{
                 fontSize: "0.75rem",
                 fontWeight: 600,
@@ -185,7 +185,7 @@ const AcademyNavbar = () => {
                 <path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               PrivaLex Advisory
-            </Link>
+            </a>
             <a
               href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=Sm8Hm1zvUU22BEzeGU8Gv4G5gXNLzeBIrBgUsxWYmJlUQ0ZZNzFBVVhFVDBOVjlERVNRWUFCSVpUUS4u"
               target="_blank"
@@ -298,8 +298,8 @@ const AcademyNavbar = () => {
               >
                 Register Now
               </a>
-              <Link
-                to="/"
+              <a
+                href="https://www.privalexadvisory.com"
                 style={{
                   textAlign: "center",
                   fontSize: "0.8rem",
@@ -309,7 +309,7 @@ const AcademyNavbar = () => {
                 }}
               >
                 ← PrivaLex Advisory
-              </Link>
+              </a>
             </div>
           </div>
         )}
