@@ -1,0 +1,28 @@
+name: Supabase Keep Alive
+
+on:
+  schedule:
+    # Runs at 00:00 UTC every Sunday and Wednesday (every 3-4 days)
+    - cron: '0 0 * * 0,3'
+  workflow_dispatch: # Allows manual testing from the GitHub UI
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase Database API
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X GET "${SUPABASE_URL}/rest/v1/keep_alive?limit=1" \
+            -H "apikey: ${SUPABASE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_KEY}")
+
+          echo "Supabase API responded with HTTP status: ${STATUS_CODE}"
+
+          if [ "$STATUS_CODE" -lt 200 ] || [ "$STATUS_CODE" -ge 300 ]; then
+            echo "Error: Request failed with status ${STATUS_CODE}"
+            exit 1
+          fi
